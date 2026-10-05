@@ -1,0 +1,44 @@
+{
+  "$schema": "https://app.clawnify.com/schema/v1/clawnify.json",
+  "version": 1,
+  "name": "Post radar",
+  "description": "Social posts worth answering, found for you. Your agent searches LinkedIn for people asking about what you do, skips what you have already seen, and queues each find with why it matters, a drafted comment and who should post it. You post the comment yourself: nothing goes out on its own.",
+  "icon": "icon.svg",
+  "tags": ["social-listening", "linkedin", "marketing", "lead-generation", "community"],
+  "template": {
+    "displayName": "Post radar",
+    "category": "Marketing"
+  },
+  "app": {
+    "framework": "react+hono",
+    "database": true,
+    "storage": false
+  },
+  "deploy": {
+    "title": "Find the posts worth answering",
+    "subtitle": "Your agent watches LinkedIn for people asking about what you do, and hands you each one with a comment ready to paste.",
+    "prompts": [
+      {
+        "key": "about",
+        "label": "In a sentence or two, what does your company do?",
+        "placeholder": "We help brands sell on Amazon, Bol and Zalando.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "key": "searches",
+        "label": "What should it look for? One search per line, typed the way you would into LinkedIn.",
+        "placeholder": "bol.com specialist\nAmazon expert gezocht\nmarketplace agency",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "key": "voices",
+        "label": "Who comments for you? Your company page and each person, one per line.",
+        "placeholder": "Acme (company page)\nJane, founder",
+        "type": "textarea"
+      }
+    ]
+  },
+  "agent": "agent.md"
+}
