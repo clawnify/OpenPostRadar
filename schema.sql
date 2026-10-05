@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS posts (
   relevance          INTEGER NOT NULL DEFAULT 0,
   reason             TEXT NOT NULL DEFAULT '',
   suggested_comment  TEXT NOT NULL DEFAULT '',
+  -- The agent's draft exactly as it arrived. suggested_comment changes as a
+  -- person edits; this never does, so the two together show what they changed.
+  original_comment   TEXT NOT NULL DEFAULT '',
   voice_id           TEXT,
   -- 'new'       = waiting for a person
   -- 'approved'  = comment copied and the post opened; not yet confirmed posted

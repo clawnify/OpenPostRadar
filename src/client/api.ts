@@ -31,6 +31,7 @@ export interface Post {
   relevance: number;
   reason: string;
   suggested_comment: string;
+  original_comment: string;
   voice_id: string | null;
   voice_name: string | null;
   status: Status;
@@ -48,6 +49,8 @@ export interface Search {
   active: boolean;
   last_run_at: string | null;
   last_found: number;
+  commented: number;
+  skipped: number;
   created_at: string;
 }
 

@@ -27,6 +27,7 @@ const PostSchema = z
     relevance: z.number(),
     reason: z.string(),
     suggested_comment: z.string(),
+    original_comment: z.string(),
     voice_id: z.string().nullable(),
     voice_name: z.string().nullable(),
     status: z.enum(STATUS),
@@ -39,7 +40,7 @@ const PostSchema = z
 
 const SELECT = `SELECT p.id, p.platform, p.url, p.author_name, p.author_headline, p.author_url, p.text,
        p.posted_at, p.found_at, p.search_id, s.query AS search_query, p.language, p.relevance, p.reason,
-       p.suggested_comment, p.voice_id, v.name AS voice_name, p.status, p.dismiss_reason,
+       p.suggested_comment, p.original_comment, p.voice_id, v.name AS voice_name, p.status, p.dismiss_reason,
        p.final_comment, p.decided_by, p.decided_at
   FROM posts p
   LEFT JOIN searches s ON s.id = p.search_id
@@ -83,7 +84,7 @@ export function registerPosts(app: App) {
     tags: ["Posts"],
     summary: "The queue, or the history",
     description:
-      "status=new is the queue, best first. status=commented and status=dismissed are the history, newest decision first: read the last 20 of each before a run, because the edits and the dismiss reasons are how this org wants it done.",
+      "status=new is the queue, best first. status=commented and status=dismissed are the history, newest decision first: read the last 20 of each before a run. original_comment against final_comment shows what people changed in your drafts, and dismiss_reason why they skipped; both are how this org wants it done.",
     request: {
       query: PageQuery.extend({
         status: z.enum(STATUS).optional().openapi({ description: "Default new" }),
@@ -219,8 +220,8 @@ export function registerPosts(app: App) {
       // still produce one row.
       await run(
         `INSERT OR IGNORE INTO posts (id, org_id, platform, url, author_name, author_headline, author_url, text,
-           posted_at, found_at, search_id, language, relevance, reason, suggested_comment, voice_id, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`,
+           posted_at, found_at, search_id, language, relevance, reason, suggested_comment, original_comment, voice_id, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`,
         [
           id,
           org,
@@ -236,6 +237,7 @@ export function registerPosts(app: App) {
           p.language ?? null,
           p.relevance,
           p.reason,
+          p.suggested_comment,
           p.suggested_comment,
           p.voice_id ?? null,
           at,

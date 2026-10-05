@@ -14,6 +14,10 @@ const SearchSchema = z
     active: z.boolean(),
     last_run_at: z.string().nullable(),
     last_found: z.number(),
+    // What people did with this search's finds: its signal-to-noise. A search
+    // whose finds are mostly skipped is costing a person time, not saving it.
+    commented: z.number(),
+    skipped: z.number(),
     created_at: z.string(),
   })
   .openapi("Search");
@@ -27,7 +31,9 @@ const Write = z.object({
 
 type Row = Omit<z.infer<typeof SearchSchema>, "active"> & { active: number };
 const shape = (r: Row) => ({ ...r, active: !!r.active });
-const COLS = "id, query, platform, intent, active, last_run_at, last_found, created_at";
+const COLS = `id, query, platform, intent, active, last_run_at, last_found, created_at,
+  (SELECT COUNT(*) FROM posts p WHERE p.search_id = searches.id AND p.status = 'commented') AS commented,
+  (SELECT COUNT(*) FROM posts p WHERE p.search_id = searches.id AND p.status = 'dismissed') AS skipped`;
 
 export function registerSearches(app: App) {
   const list = createRoute({
@@ -35,7 +41,7 @@ export function registerSearches(app: App) {
     path: "/api/searches",
     tags: ["Searches"],
     summary: "The searches",
-    description: "active=true for the ones to run. Oldest first, which is the order to run them in.",
+    description: "active=true for the ones to run. Oldest first, which is the order to run them in. commented and skipped count what people did with each search's finds: propose pausing or rewording one that is mostly skipped.",
     request: { query: PageQuery.extend({ active: z.enum(["true", "false"]).optional() }) },
     responses: { 200: pagedResponse("searches", SearchSchema), 403: fail("No organisation") },
   });

@@ -214,6 +214,7 @@ export function Searches({ onError, onChanged }: { onError: OnError; onChanged: 
                 <p className="mt-0.5 text-sm text-faint">
                   Last run {ago(s.last_run_at)}
                   {s.last_run_at ? ` · ${s.last_found} new` : ""}
+                  {s.commented + s.skipped > 0 ? ` · ${s.commented} commented, ${s.skipped} skipped` : ""}
                 </p>
               </div>
               {!s.active && <Pill tone="muted">Paused</Pill>}
