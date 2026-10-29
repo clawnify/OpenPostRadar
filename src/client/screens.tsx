@@ -37,7 +37,7 @@ export function Queue({ voices, onError, onCount }: { voices: Voice[]; onError: 
     return (
       <Empty
         title="Nothing waiting"
-        hint="Every post found so far has been answered or skipped. New ones appear here after your agent's next run."
+        hint="Nothing new to answer. New finds appear here after your agent's next run."
       />
     );
 

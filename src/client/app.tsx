@@ -61,7 +61,9 @@ export function App() {
     { id: "voices", label: "Voices", href: "/voices", icon: "users", color: "amber" },
   ];
 
-  const setupDone = !!overview && (overview.active_searches > 0 || overview.last_run_at !== null);
+  // Setup lasts until the first run: a search alone leaves the queue empty with
+  // nothing to say why. Waiting posts end it too, whoever reported them.
+  const setupDone = !!overview && (overview.last_run_at !== null || overview.waiting > 0);
   const [title, subtitle] = TITLES[view];
 
   return (
@@ -85,7 +87,7 @@ export function App() {
           {overview === null ? (
             <p className="text-sm text-muted">Loading…</p>
           ) : view === "queue" && !setupDone ? (
-            <Setup voices={voices.length} onGo={go} />
+            <Setup voices={voices.length} searches={overview.active_searches} onGo={go} />
           ) : view === "queue" ? (
             <Queue voices={voices} onError={setError} onCount={(n) => setOverview((o) => (o ? { ...o, waiting: n } : o))} />
           ) : view === "history" ? (
@@ -101,8 +103,8 @@ export function App() {
   );
 }
 
-/** First run: a checklist with one step open, until the first search exists. */
-function Setup({ voices, onGo }: { voices: number; onGo: (v: View) => void }) {
+/** First run: a checklist with one step open, until the agent's first run. */
+function Setup({ voices, searches, onGo }: { voices: number; searches: number; onGo: (v: View) => void }) {
   const steps = [
     {
       done: voices > 0,
@@ -112,7 +114,7 @@ function Setup({ voices, onGo }: { voices: number; onGo: (v: View) => void }) {
       view: "voices" as View,
     },
     {
-      done: false,
+      done: searches > 0,
       title: "Tell it what to look for",
       body: "A few short searches, typed the way you would into LinkedIn. Each with a line on what a good find looks like.",
       action: "Add searches",
