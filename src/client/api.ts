@@ -71,6 +71,21 @@ export interface Overview {
   last_run_at: string | null;
 }
 
+export interface RunSettings {
+  server_id: string;
+  time: string;
+  weekdays_only: boolean;
+  tz: string;
+  enabled: boolean;
+}
+
+export interface RunSchedule {
+  available: boolean;
+  settings: (RunSettings & { scheduled: boolean; error: string | null }) | null;
+  live: { next_run_at: string | null; last_run_at: string | null; last_status: string | null; last_error: string | null; running: boolean } | null;
+  agents: { id: string; name: string | null; status: string | null }[];
+}
+
 export type PostPatch = Partial<Pick<Post, "status" | "suggested_comment" | "voice_id" | "final_comment" | "dismiss_reason">>;
 export type SearchWrite = Partial<Pick<Search, "query" | "platform" | "intent" | "active">>;
 export type VoiceWrite = Partial<Pick<Voice, "name" | "kind" | "profile_url" | "notes">>;
@@ -88,6 +103,10 @@ export const api = {
   addSearch: (body: SearchWrite) => request<Search>("/api/searches", json("POST", body)),
   updateSearch: (id: string, body: SearchWrite) => request<Search>(`/api/searches/${id}`, json("PATCH", body)),
   deleteSearch: (id: string) => request<{ ok: boolean }>(`/api/searches/${id}`, { method: "DELETE" }),
+
+  runSchedule: () => request<RunSchedule>("/api/run-schedule"),
+  saveRunSchedule: (body: RunSettings) => request<{ ok: boolean }>("/api/run-schedule", json("PUT", body)),
+  runNow: () => request<{ ok: boolean }>("/api/run-schedule/run", json("POST", { key: crypto.randomUUID() })),
 
   voices: () => request<{ voices: Voice[]; total: number }>("/api/voices?limit=100"),
   addVoice: (body: VoiceWrite) => request<Voice>("/api/voices", json("POST", body)),

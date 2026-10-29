@@ -9,6 +9,7 @@ import { query } from "./db.js";
 import type { Env } from "./env.js";
 import { counts, registerPosts } from "./routes/posts.js";
 import { registerSearches } from "./routes/searches.js";
+import { scheduleRoutes } from "./routes/schedule.js";
 import { registerVoices } from "./routes/voices.js";
 
 const app = createApp<Env>({
@@ -26,6 +27,7 @@ app.onError((err, c) => {
 registerPosts(app);
 registerSearches(app);
 registerVoices(app);
+app.route("/", scheduleRoutes);
 
 widgets(app, async (c) => {
   const org = orgId(c);

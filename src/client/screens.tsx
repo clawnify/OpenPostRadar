@@ -2,7 +2,7 @@
 // on its own, which is how the dashboard deep-links into an app.
 
 import { useEffect, useState } from "react";
-import { ago, api, type Post, type Search, type Status, type Voice } from "./api";
+import { ago, api, type Post, type RunSchedule, type RunSettings, type Search, type Status, type Voice } from "./api";
 import { PostCard } from "./post";
 import { Card, Confirm, Empty, Field, inputClass, Pill, primaryClass, quietClass } from "./ui";
 
@@ -171,6 +171,7 @@ export function Searches({ onError, onChanged }: { onError: OnError; onChanged: 
 
   return (
     <div className="grid max-w-3xl grid-cols-1 gap-5">
+      <WhenItRuns onError={onError} />
       <Card title="Add a search" hint="Write it the way you would type it into LinkedIn's search box. Short beats clever.">
         <form
           className="grid gap-3 sm:grid-cols-[1fr_1.4fr_auto] sm:items-end"
@@ -331,5 +332,111 @@ export function Voices({ voices, onError, onChanged }: { voices: Voice[]; onErro
         />
       )}
     </div>
+  );
+}
+
+/** Which agent runs the searches, and when. Saving creates or updates one schedule on that agent. */
+function WhenItRuns({ onError }: { onError: OnError }) {
+  const [data, setData] = useState<RunSchedule | null>(null);
+  const [draft, setDraft] = useState<RunSettings | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState("");
+
+  const load = () =>
+    api
+      .runSchedule()
+      .then((r) => {
+        setData(r);
+        setDraft(
+          r.settings ?? {
+            server_id: r.agents[0]?.id ?? "",
+            time: "08:00",
+            weekdays_only: true,
+            tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Amsterdam",
+            enabled: true,
+          },
+        );
+      })
+      .catch((e: Error) => onError(e.message));
+  useEffect(() => {
+    void load();
+  }, []);
+
+  async function act(fn: () => Promise<unknown>, done: string) {
+    setBusy(true);
+    setNote("");
+    try {
+      await fn();
+      setNote(done);
+    } catch (e) {
+      onError((e as Error).message);
+    } finally {
+      setBusy(false);
+      void load();
+    }
+  }
+
+  if (!data || !draft) return null;
+  if (!data.available)
+    return <Card title="When it runs" hint="Scheduling works once the app runs on Clawnify. Until then, ask your agent to run it.">{null}</Card>;
+  if (!data.agents.length)
+    return <Card title="When it runs" hint="Hire an agent first: it is the one that runs the searches in its own browser.">{null}</Card>;
+
+  const live = data.live;
+  const saved = data.settings;
+  return (
+    <Card title="When it runs" hint="Your agent runs every active search at this time and queues what it finds here.">
+      <form
+        className="grid gap-3 sm:grid-cols-[1.4fr_auto_auto] sm:items-end"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void act(() => api.saveRunSchedule(draft), "Saved.");
+        }}
+      >
+        <Field label="Agent">
+          <select className={inputClass} value={draft.server_id} onChange={(e) => setDraft({ ...draft, server_id: e.target.value })}>
+            {data.agents.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name || "Unnamed agent"}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Time">
+          <input type="time" className={inputClass} value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} required />
+        </Field>
+        <button type="submit" className={primaryClass} disabled={busy || !draft.server_id || !draft.time}>
+          Save
+        </button>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm sm:col-span-3">
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={draft.weekdays_only} onChange={(e) => setDraft({ ...draft, weekdays_only: e.target.checked })} />
+            Weekdays only
+          </label>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={draft.enabled} onChange={(e) => setDraft({ ...draft, enabled: e.target.checked })} />
+            Run on this schedule
+          </label>
+          <span className="text-faint">{draft.tz}</span>
+        </div>
+      </form>
+      <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-4 text-sm">
+        <p className="min-w-0 flex-1 text-muted">
+          {saved?.error
+            ? <span className="text-danger">{saved.error}</span>
+            : !saved?.scheduled
+              ? "Not scheduled yet."
+              : live?.running
+                ? "Running now."
+                : `${saved.enabled && live?.next_run_at ? `Next run ${new Date(live.next_run_at).toLocaleString()}` : "Paused"} · last run ${ago(live?.last_run_at ?? null)}${live?.last_status === "error" ? " (failed)" : ""}`}
+          {note && <span className="ml-2 text-success">{note}</span>}
+        </p>
+        {saved?.scheduled && (
+          <button type="button" className={quietClass} disabled={busy || live?.running} onClick={() => void act(() => api.runNow(), "Run started.")}>
+            Run now
+          </button>
+        )}
+      </div>
+    </Card>
   );
 }

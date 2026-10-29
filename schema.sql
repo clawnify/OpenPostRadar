@@ -89,3 +89,22 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE UNIQUE INDEX IF NOT EXISTS posts_org_url ON posts(org_id, url);
 CREATE INDEX IF NOT EXISTS posts_queue ON posts(org_id, status, relevance);
 CREATE INDEX IF NOT EXISTS posts_decided ON posts(org_id, decided_at);
+
+-- When the agent runs the searches: one row per org. The agent's own scheduler
+-- owns the clock; this row owns which agent runs it and that schedule's id.
+CREATE TABLE IF NOT EXISTS run_schedule (
+  org_id          TEXT PRIMARY KEY,
+  server_id       TEXT NOT NULL,
+  -- "HH:MM" in tz.
+  time            TEXT NOT NULL DEFAULT '08:00',
+  weekdays_only   INTEGER NOT NULL DEFAULT 1,
+  tz              TEXT NOT NULL DEFAULT 'Europe/Amsterdam',
+  enabled         INTEGER NOT NULL DEFAULT 1,
+  schedule_id     TEXT,
+  -- A create whose outcome is unknown: its key and exact request, replayed
+  -- before anything else so the agent never ends up with two schedules.
+  pending_key     TEXT,
+  pending_request TEXT,
+  error           TEXT,
+  updated_at      TEXT NOT NULL
+);

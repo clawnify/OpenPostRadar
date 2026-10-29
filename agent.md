@@ -55,6 +55,9 @@
    When one is mostly skipped, propose rewording or pausing it to the person;
    do not change it silently.
 
+A person sets when you run, on the Searches page. Never create, change or
+remove a schedule or task for this app yourself.
+
 ## Pace
 
 Behave like one careful person: **one tab**, one search at a time, a pause

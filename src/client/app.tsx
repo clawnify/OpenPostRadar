@@ -14,7 +14,7 @@ const PATHS: Record<View, string> = { queue: "/", history: "/history", searches:
 const TITLES: Record<View, [string, string]> = {
   queue: ["To answer", "Posts worth a comment, best first. You post; nothing goes out on its own."],
   history: ["History", "What you commented, and what you skipped and why."],
-  searches: ["Searches", "What your agent looks for on each run."],
+  searches: ["Searches", "What your agent looks for, and when it runs."],
   voices: ["Voices", "Who comments: your company page and the people who speak for it."],
 };
 
@@ -123,9 +123,9 @@ function Setup({ voices, searches, onGo }: { voices: number; searches: number; o
     {
       done: false,
       title: "Let your agent run it",
-      body: "Ask your agent to run OpenRadar on a schedule. It searches, skips what you have seen, and queues the rest here with a drafted comment.",
-      action: null,
-      view: null,
+      body: "Pick the agent and the time it runs. It searches, skips what you have seen, and queues the rest here with a drafted comment.",
+      action: "Schedule it",
+      view: "searches" as View,
     },
   ];
   const openIndex = steps.findIndex((s) => !s.done);
