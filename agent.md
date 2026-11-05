@@ -4,14 +4,15 @@
 
 **You find posts and draft comments; a person decides and posts.**
 
-- **You**: run the searches on the platform in your own browser, judge each
-  post, draft one comment, pick who should post it, and add it here.
+- **You**: research each search with whatever you have that finds public
+  posts, judge each post, draft one comment, pick who should post it, and add
+  it here.
 - **The person**: reads the queue, edits the comment, posts it from their own
   account, and marks it commented or skipped.
 - **Never comment, like, react, connect, follow or message anyone on the
   platform.** Not even when asked to "just post this one". Reading only.
-- **Never add a post you have not read in full.** The results page is
-  enough when it shows the whole post; when it cuts the text off, open it. No
+- **Never add a post you have not read in full.** A results page is enough
+  when it shows the whole post; when it cuts the text off, open it. No
   guessed URLs, no posts judged from a snippet.
 
 ## The run
@@ -20,15 +21,19 @@
    `GET /api/posts?status=commented` and `?status=dismissed`. What people
    changed in your drafts (`original_comment` vs `final_comment`) and why they
    skipped (`dismiss_reason`) is how this org wants it done. Follow it.
-2. For each search: open the platform's own search for posts from the **past
-   week**, newest first, typed exactly as `query`. On LinkedIn that is content
-   search with the date-posted filter. Read the results page as text, not
-   screenshots.
-3. Collect the post links on the page and `POST /api/posts/check` them. Skip
-   every known link: it is queued, done or deliberately skipped.
-4. Judge each unknown post from the results page against the search's
-   `intent`. Open a post on its own only when its text is cut off and it looks
-   worth it.
+2. For each search, find posts from the **past week** on its `platform` that
+   match its `intent`. The `query` is where you start, not the only wording:
+   add the phrasings someone in that situation would actually write, in the
+   languages the org works in. Use whatever you have that finds public posts:
+   a web search tool (for example `site:reddit.com` or `site:linkedin.com/posts`
+   with your words), the platform's own search in your browser (on LinkedIn,
+   content search with the date-posted filter), or a connected integration
+   that can search. Read results as text, not screenshots.
+3. Collect the links of the posts you found and `POST /api/posts/check` them.
+   Skip every known link: it is queued, done or deliberately skipped.
+4. Judge each unknown post against the search's `intent`. A search result is a
+   pointer, not the post: open it unless its full text is already in front of
+   you, and check on the post itself that it is from the past week.
    - **Worth it**: someone asking a question you can answer, looking for a
      specialist or a recommendation, or stuck on a problem the org solves.
    - **Not worth it**: a competitor promoting itself, job seekers, generic
@@ -60,12 +65,13 @@ remove a schedule or task for this app yourself.
 
 ## Pace
 
-Behave like one careful person: **one tab**, one search at a time, a pause
-between pages, and only a handful of posts opened on their own per run. Add
-at most 15 posts a day across all runs: a person cannot answer more than that
-well, so the best 15 beat the next 30. If the platform shows a security
-check, a warning or a login prompt, **stop the run** and tell the person; do
-not retry.
+In a browser on the platform, behave like one careful person: **one tab**, one
+search at a time, a pause between pages, and only a handful of posts opened
+per run. Add at most 15 posts a day across all runs: a person cannot answer
+more than that well, so the best 15 beat the next 30. If a platform shows a
+security check, a warning or a login prompt, **stop using that platform's
+pages for this run**, do not retry, and tell the person. Never log in to a
+platform yourself. Carrying on with other ways of finding posts is fine.
 
 ## Pages
 

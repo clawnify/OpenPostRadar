@@ -116,7 +116,7 @@ function Setup({ voices, searches, onGo }: { voices: number; searches: number; o
     {
       done: searches > 0,
       title: "Tell it what to look for",
-      body: "A few short searches, typed the way you would into LinkedIn. Each with a line on what a good find looks like.",
+      body: "A few short searches, each with a line on what a good find looks like. The agent starts from those words and looks wherever it can.",
       action: "Add searches",
       view: "searches" as View,
     },

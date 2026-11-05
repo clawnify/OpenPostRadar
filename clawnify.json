@@ -27,7 +27,7 @@
       },
       {
         "key": "searches",
-        "label": "What should it look for? One search per line, typed the way you would into LinkedIn.",
+        "label": "What should it look for? One search per line, in a few words.",
         "placeholder": "bol.com specialist\nAmazon expert gezocht\nmarketplace agency",
         "type": "textarea",
         "required": true
