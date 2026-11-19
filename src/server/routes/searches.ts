@@ -127,10 +127,13 @@ export function registerSearches(app: App) {
     path: "/api/searches/{id}/ran",
     tags: ["Searches"],
     summary: "Report a run",
-    description: "Call it after every run of this search, also when nothing new turned up (found: 0).",
+    description: "Call it after every run of this search, also when nothing new turned up (found: 0, the default).",
     request: {
       params: z.object({ id: z.string() }),
-      body: { content: { "application/json": { schema: z.object({ found: z.number().int().min(0) }) } } },
+      body: {
+        required: false,
+        content: { "application/json": { schema: z.object({ found: z.number().int().min(0).default(0) }) } },
+      },
     },
     responses: { 200: ok("Saved", OkSchema), 403: fail("No organisation") },
   });
@@ -140,7 +143,8 @@ export function registerSearches(app: App) {
     if (!org) return c.json(NO_ORG, 403);
     await run(`UPDATE searches SET last_run_at = ?, last_found = ? WHERE id = ? AND org_id = ?`, [
       now(),
-      c.req.valid("json").found,
+      // A call with no JSON body skips the schema, so found can be missing.
+      c.req.valid("json")?.found ?? 0,
       c.req.valid("param").id,
       org,
     ]);
