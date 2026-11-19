@@ -14,6 +14,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export type Status = "new" | "approved" | "commented" | "dismissed";
+export type QueueSort = "newest" | "best" | "found";
 
 export interface Post {
   id: string;
@@ -95,8 +96,10 @@ const json = (method: string, body: unknown): RequestInit => ({ method, body: JS
 export const api = {
   overview: () => request<Overview>("/api/overview"),
 
-  posts: (status: Status, page = 1) =>
-    request<{ posts: Post[]; total: number; page: number }>(`/api/posts?status=${status}&page=${page}&limit=25`),
+  posts: (status: Status, page = 1, sort?: QueueSort) =>
+    request<{ posts: Post[]; total: number; page: number }>(
+      `/api/posts?status=${status}&page=${page}&limit=25${sort ? `&sort=${sort}` : ""}`,
+    ),
   updatePost: (id: string, body: PostPatch) => request<Post>(`/api/posts/${id}`, json("PATCH", body)),
 
   searches: () => request<{ searches: Search[]; total: number }>("/api/searches?limit=100"),

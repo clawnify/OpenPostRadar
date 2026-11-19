@@ -6,9 +6,19 @@
 import { createRoute, orgId, PageQuery, pagedResponse, pageParams, user, caller, z } from "@clawnify/app";
 import { get, query, run } from "../db.js";
 import { fail, NO_ORG, now, ok, uid, type App } from "../env.js";
-import { normalizeUrl } from "../url.js";
+import { normalizeUrl, platformOf } from "../url.js";
 
 const STATUS = ["new", "approved", "commented", "dismissed"] as const;
+
+// The ways a person can order the queue. "newest" reads the posted date where
+// the platform gave one and the found date otherwise, so an undated post sorts
+// by the day it was found.
+const QUEUE_SORTS = ["best", "newest", "found"] as const;
+const QUEUE_ORDER: Record<(typeof QUEUE_SORTS)[number], string> = {
+  best: "p.relevance DESC, p.found_at DESC",
+  newest: "COALESCE(p.posted_at, p.found_at) DESC, p.relevance DESC",
+  found: "p.found_at DESC, p.relevance DESC",
+};
 
 const PostSchema = z
   .object({
@@ -84,10 +94,13 @@ export function registerPosts(app: App) {
     tags: ["Posts"],
     summary: "The queue, or the history",
     description:
-      "status=new is the queue, best first. status=commented and status=dismissed are the history, newest decision first: read the last 20 of each before a run. original_comment against final_comment shows what people changed in your drafts, and dismiss_reason why they skipped; both are how this org wants it done.",
+      "status=new is the queue, best first unless sort says otherwise. status=commented and status=dismissed are the history, newest decision first: read the last 20 of each before a run. original_comment against final_comment shows what people changed in your drafts, and dismiss_reason why they skipped; both are how this org wants it done.",
     request: {
       query: PageQuery.extend({
         status: z.enum(STATUS).optional().openapi({ description: "Default new" }),
+        sort: z.enum(QUEUE_SORTS).optional().openapi({
+          description: "The queue's order (status=new only). best (default): highest relevance first. newest: most recently posted first. found: most recently found first.",
+        }),
         search_id: z.string().optional(),
         voice_id: z.string().optional(),
       }),
@@ -118,7 +131,7 @@ export function registerPosts(app: App) {
       args.push(like, like, like);
     }
     const clause = where.join(" AND ");
-    const order = status === "new" ? "p.relevance DESC, p.found_at DESC" : "p.decided_at DESC";
+    const order = status === "new" ? QUEUE_ORDER[q.sort ?? "best"] : "p.decided_at DESC";
     const posts = await query(`${SELECT} WHERE ${clause} ORDER BY ${order} LIMIT ? OFFSET ?`, [...args, limit, offset]);
     const total = await get<{ n: number }>(`SELECT COUNT(*) AS n FROM posts p WHERE ${clause}`, args);
     return c.json({ posts, total: Number(total?.n ?? 0), page, limit } as never, 200);
@@ -225,7 +238,7 @@ export function registerPosts(app: App) {
         [
           id,
           org,
-          (p.platform ?? "linkedin").toLowerCase(),
+          platformOf(url) ?? (p.platform ?? "linkedin").toLowerCase(),
           url,
           p.author_name,
           p.author_headline ?? "",

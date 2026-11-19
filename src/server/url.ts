@@ -21,3 +21,16 @@ export function normalizeUrl(raw: string): string | null {
   const path = u.pathname.replace(/\/+$/, "");
   return `${u.protocol}//${u.hostname}${path}`;
 }
+
+// The link says where a post is, so it decides the platform. What a run sends
+// is used only for a site not named here: the agent once left it out on Reddit
+// posts, and the default filed them as LinkedIn.
+const PLATFORMS: [string, string][] = [
+  ["linkedin.com", "linkedin"],
+  ["reddit.com", "reddit"],
+];
+
+export function platformOf(url: string): string | null {
+  const host = new URL(url).hostname.toLowerCase();
+  return PLATFORMS.find(([domain]) => host === domain || host.endsWith(`.${domain}`))?.[1] ?? null;
+}

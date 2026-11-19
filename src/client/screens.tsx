@@ -2,20 +2,38 @@
 // on its own, which is how the dashboard deep-links into an app.
 
 import { useEffect, useState } from "react";
-import { ago, api, type Post, type RunSchedule, type RunSettings, type Search, type Status, type Voice } from "./api";
+import { ago, api, type Post, type QueueSort, type RunSchedule, type RunSettings, type Search, type Status, type Voice } from "./api";
 import { PostCard } from "./post";
 import { Card, Confirm, Empty, Field, inputClass, Pill, primaryClass, quietClass } from "./ui";
 
 type OnError = (message: string) => void;
 
+const SORTS: { id: QueueSort; label: string }[] = [
+  { id: "newest", label: "Newest post" },
+  { id: "best", label: "Best match" },
+  { id: "found", label: "Recently found" },
+];
+// Each viewer's own choice, kept in their browser. Storage can be missing or
+// refuse (a private window, blocked site data); the queue then opens on newest.
+const SORT_KEY = "post-radar:queue-sort";
+function savedSort(): QueueSort {
+  try {
+    const v = localStorage.getItem(SORT_KEY);
+    return SORTS.some((s) => s.id === v) ? (v as QueueSort) : "newest";
+  } catch {
+    return "newest";
+  }
+}
+
 export function Queue({ voices, onError, onCount }: { voices: Voice[]; onError: OnError; onCount: (n: number) => void }) {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState<QueueSort>(savedSort);
 
-  async function load(p: number) {
+  async function load(p: number, by: QueueSort = sort) {
     try {
-      const res = await api.posts("new", p);
+      const res = await api.posts("new", p, by);
       setPosts((prev) => (p === 1 ? res.posts : [...(prev ?? []), ...res.posts]));
       setTotal(res.total);
       setPage(p);
@@ -23,6 +41,17 @@ export function Queue({ voices, onError, onCount }: { voices: Voice[]; onError: 
       onError((e as Error).message);
       setPosts([]);
     }
+  }
+
+  function sortBy(next: QueueSort) {
+    if (next === sort) return;
+    setSort(next);
+    try {
+      localStorage.setItem(SORT_KEY, next);
+    } catch {
+      // Not remembered; it still applies now.
+    }
+    void load(1, next);
   }
 
   useEffect(() => {
@@ -43,6 +72,20 @@ export function Queue({ voices, onError, onCount }: { voices: Voice[]; onError: 
 
   return (
     <div className="grid max-w-3xl grid-cols-1 gap-4">
+      <div className="flex flex-wrap items-center gap-1" role="group" aria-label="Sort the queue">
+        <span className="mr-1 text-sm text-muted">Sort by</span>
+        {SORTS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            aria-pressed={sort === s.id}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium ${sort === s.id ? "bg-sunken text-foreground" : "text-muted hover:text-foreground"}`}
+            onClick={() => sortBy(s.id)}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
       {open.map((p) => (
         <PostCard
           key={p.id}

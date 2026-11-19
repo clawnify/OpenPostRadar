@@ -1,5 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { normalizeUrl } from "./url";
+import { normalizeUrl, platformOf } from "./url";
+
+describe("platformOf", () => {
+  it("reads the platform from the link's host", () => {
+    expect(platformOf("https://www.linkedin.com/posts/jan-123")).toBe("linkedin");
+    expect(platformOf("https://old.reddit.com/r/AmazonFBA/comments/abc")).toBe("reddit");
+    expect(platformOf("https://www.reddit.com/r/AmazonSeller/comments/abc")).toBe("reddit");
+  });
+
+  it("knows no other site, and no look-alike host", () => {
+    expect(platformOf("https://example.com/post/1")).toBeNull();
+    expect(platformOf("https://notreddit.com/r/x")).toBeNull();
+  });
+});
 
 describe("normalizeUrl", () => {
   it("drops tracking, fragments and the trailing slash", () => {
