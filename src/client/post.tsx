@@ -5,6 +5,24 @@
 import { useRef, useState } from "react";
 import { ago, api, type Post, type Voice } from "./api";
 import { inputClass, Pill, primaryClass, quietClass } from "./ui";
+import linkedinLogo from "./logos/linkedin.svg";
+import redditLogo from "./logos/reddit.svg";
+
+// Where a post is, read from its own link. The logos come from
+// @clawnify/logokit (thesvg.org) and ship with the app, so showing them makes
+// no viewer's browser call a third party.
+const SITES = [
+  { domain: "linkedin.com", name: "LinkedIn", logo: linkedinLogo },
+  { domain: "reddit.com", name: "Reddit", logo: redditLogo },
+];
+function siteOf(url: string) {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return SITES.find((s) => host === s.domain || host.endsWith(`.${s.domain}`)) ?? null;
+  } catch {
+    return null;
+  }
+}
 
 const DISMISS_REASONS = ["Not relevant", "A competitor", "Too old", "Already answered", "Not our audience"];
 
@@ -60,6 +78,7 @@ export function PostCard({
 
   const long = post.text.length > 420;
   const strong = post.relevance >= 75;
+  const site = siteOf(post.url);
 
   return (
     <article className="card p-5">
@@ -77,6 +96,12 @@ export function PostCard({
           {post.author_headline && <p className="truncate text-sm text-muted">{post.author_headline}</p>}
         </div>
         <div className="flex shrink-0 items-center gap-2">
+          {site && (
+            <span className="inline-flex items-center gap-1.5 text-sm text-faint">
+              <img src={site.logo} alt="" className="size-4" />
+              {site.name}
+            </span>
+          )}
           <span className="text-sm text-faint">{ago(post.posted_at ?? post.found_at)}</span>
           <Pill tone={strong ? "success" : "muted"}>
             <span className="tnum">{post.relevance}% match</span>

@@ -17,6 +17,10 @@
 
 ## The run
 
+When your instruction names one search, this run is for that search alone,
+active or paused: read it from `GET /api/searches` and skip every other one.
+Everything below applies to it unchanged.
+
 1. `GET /api/searches?active=true`, `GET /api/voices`, and the last 20 of
    `GET /api/posts?status=commented` and `?status=dismissed`. What people
    changed in your drafts (`original_comment` vs `final_comment`) and why they

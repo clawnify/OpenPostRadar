@@ -188,6 +188,22 @@ export function Searches({ onError, onChanged }: { onError: OnError; onChanged: 
   const [list, setList] = useState<Search[] | null>(null);
   const [draft, setDraft] = useState({ query: "", intent: "" });
   const [removing, setRemoving] = useState<Search | null>(null);
+  // Searches sent to the agent from this page; each button says so until reload.
+  const [started, setStarted] = useState<Set<string>>(new Set());
+
+  async function runOne(id: string) {
+    setStarted((s) => new Set(s).add(id));
+    try {
+      await api.runSearch(id);
+    } catch (e) {
+      setStarted((s) => {
+        const next = new Set(s);
+        next.delete(id);
+        return next;
+      });
+      onError((e as Error).message);
+    }
+  }
 
   const load = () =>
     api
@@ -261,6 +277,9 @@ export function Searches({ onError, onChanged }: { onError: OnError; onChanged: 
                 </p>
               </div>
               {!s.active && <Pill tone="muted">Paused</Pill>}
+              <button type="button" className={quietClass} disabled={started.has(s.id)} onClick={() => void runOne(s.id)}>
+                {started.has(s.id) ? "Run started" : "Run"}
+              </button>
               <button type="button" className={quietClass} onClick={() => void act(() => api.updateSearch(s.id, { active: !s.active }))}>
                 {s.active ? "Pause" : "Resume"}
               </button>

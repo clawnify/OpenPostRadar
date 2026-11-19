@@ -110,6 +110,8 @@ export const api = {
   runSchedule: () => request<RunSchedule>("/api/run-schedule"),
   saveRunSchedule: (body: RunSettings) => request<{ ok: boolean }>("/api/run-schedule", json("PUT", body)),
   runNow: () => request<{ ok: boolean }>("/api/run-schedule/run", json("POST", { key: crypto.randomUUID() })),
+  runSearch: (searchId: string) =>
+    request<{ ok: boolean }>("/api/run-schedule/search", json("POST", { key: crypto.randomUUID(), search_id: searchId })),
 
   voices: () => request<{ voices: Voice[]; total: number }>("/api/voices?limit=100"),
   addVoice: (body: VoiceWrite) => request<Voice>("/api/voices", json("POST", body)),
