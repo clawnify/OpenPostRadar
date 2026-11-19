@@ -2,6 +2,7 @@
 // on its own, which is how the dashboard deep-links into an app.
 
 import { useEffect, useState } from "react";
+import { openInDashboard } from "@clawnify/app/client";
 import { ago, api, type Post, type QueueSort, type RunSchedule, type RunSettings, type Search, type Status, type Voice } from "./api";
 import { Playbook } from "./playbook";
 import { PostCard } from "./post";
@@ -494,6 +495,13 @@ function WhenItRuns({ onError }: { onError: OnError }) {
                 : `${saved.enabled && live?.next_run_at ? `Next run ${new Date(live.next_run_at).toLocaleString()}` : "Paused"} · last run ${ago(live?.last_run_at ?? null)}${live?.last_status === "error" ? " (failed)" : ""}`}
           {note && <span className="ml-2 text-success">{note}</span>}
         </p>
+        {saved?.schedule_id && (
+          // Each run's result and, for the latest, what the agent did: on the
+          // agent's Schedule page, which keeps the history.
+          <button type="button" className={quietClass} onClick={() => openInDashboard({ kind: "schedule", serverId: saved.server_id, scheduleId: saved.schedule_id! })}>
+            See runs
+          </button>
+        )}
         {saved?.scheduled && (
           <button type="button" className={quietClass} disabled={busy || live?.running} onClick={() => void act(() => api.runNow(), "Run started.")}>
             Run now

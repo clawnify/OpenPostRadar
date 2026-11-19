@@ -109,6 +109,8 @@ scheduleRoutes.get("/api/run-schedule", async (c) => {
     tz: row.tz,
     enabled: !!row.enabled,
     scheduled: !!row.schedule_id,
+    // Not a secret: it opens the schedule's runs in the dashboard ("See runs").
+    schedule_id: row.schedule_id,
     error: row.error,
   };
   return c.json({ available: true, settings, live, agents: servers });

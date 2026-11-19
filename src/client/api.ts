@@ -88,7 +88,7 @@ export interface RunSettings {
 
 export interface RunSchedule {
   available: boolean;
-  settings: (RunSettings & { scheduled: boolean; error: string | null }) | null;
+  settings: (RunSettings & { scheduled: boolean; schedule_id: string | null; error: string | null }) | null;
   live: { next_run_at: string | null; last_run_at: string | null; last_status: string | null; last_error: string | null; running: boolean } | null;
   agents: { id: string; name: string | null; status: string | null }[];
 }
