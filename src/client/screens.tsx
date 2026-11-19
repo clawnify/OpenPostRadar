@@ -9,9 +9,8 @@ import { Card, Confirm, Empty, Field, inputClass, Pill, primaryClass, quietClass
 type OnError = (message: string) => void;
 
 const SORTS: { id: QueueSort; label: string }[] = [
-  { id: "newest", label: "Newest post" },
-  { id: "best", label: "Best match" },
-  { id: "found", label: "Recently found" },
+  { id: "newest", label: "Most recent" },
+  { id: "oldest", label: "Oldest" },
 ];
 // Each viewer's own choice, kept in their browser. Storage can be missing or
 // refuse (a private window, blocked site data); the queue then opens on newest.

@@ -10,14 +10,15 @@ import { normalizeUrl, platformOf } from "../url.js";
 
 const STATUS = ["new", "approved", "commented", "dismissed"] as const;
 
-// The ways a person can order the queue. "newest" reads the posted date where
-// the platform gave one and the found date otherwise, so an undated post sorts
-// by the day it was found.
-const QUEUE_SORTS = ["best", "newest", "found"] as const;
+// The queue's orders. A person picks most recent or oldest; best stays the
+// API's default. A post's date is when it was posted where the platform gave
+// one, else when it was found.
+const QUEUE_SORTS = ["best", "newest", "oldest"] as const;
+const POST_DATE = "COALESCE(p.posted_at, p.found_at)";
 const QUEUE_ORDER: Record<(typeof QUEUE_SORTS)[number], string> = {
   best: "p.relevance DESC, p.found_at DESC",
-  newest: "COALESCE(p.posted_at, p.found_at) DESC, p.relevance DESC",
-  found: "p.found_at DESC, p.relevance DESC",
+  newest: `${POST_DATE} DESC, p.relevance DESC`,
+  oldest: `${POST_DATE} ASC, p.relevance DESC`,
 };
 
 const PostSchema = z
@@ -99,7 +100,7 @@ export function registerPosts(app: App) {
       query: PageQuery.extend({
         status: z.enum(STATUS).optional().openapi({ description: "Default new" }),
         sort: z.enum(QUEUE_SORTS).optional().openapi({
-          description: "The queue's order (status=new only). best (default): highest relevance first. newest: most recently posted first. found: most recently found first.",
+          description: "The queue's order (status=new only). best (default): highest relevance first. newest: most recently posted first. oldest: earliest posted first.",
         }),
         search_id: z.string().optional(),
         voice_id: z.string().optional(),

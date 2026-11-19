@@ -14,7 +14,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export type Status = "new" | "approved" | "commented" | "dismissed";
-export type QueueSort = "newest" | "best" | "found";
+export type QueueSort = "newest" | "oldest";
 
 export interface Post {
   id: string;
