@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { ago, api, type Post, type QueueSort, type RunSchedule, type RunSettings, type Search, type Status, type Voice } from "./api";
+import { Playbook } from "./playbook";
 import { PostCard } from "./post";
 import { Card, Confirm, Empty, Field, inputClass, Pill, primaryClass, quietClass } from "./ui";
 
@@ -290,6 +291,7 @@ export function Searches({ onError, onChanged }: { onError: OnError; onChanged: 
           ))}
         </ul>
       )}
+      <Playbook onError={onError} />
       {removing && (
         <Confirm
           title={`Delete “${removing.query}”?`}

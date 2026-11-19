@@ -108,3 +108,13 @@ CREATE TABLE IF NOT EXISTS run_schedule (
   error           TEXT,
   updated_at      TEXT NOT NULL
 );
+
+-- What runs have learned about finding posts: the wordings and techniques that
+-- found real asks, and the ones that only found noise. One text per org. The
+-- agent reads it before a run and rewrites it after; a person can edit it too.
+CREATE TABLE IF NOT EXISTS playbook (
+  org_id      TEXT PRIMARY KEY,
+  body        TEXT NOT NULL DEFAULT '',
+  updated_at  TEXT,
+  updated_by  TEXT
+);

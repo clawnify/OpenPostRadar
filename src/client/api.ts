@@ -16,6 +16,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export type Status = "new" | "approved" | "commented" | "dismissed";
 export type QueueSort = "newest" | "oldest";
 
+export interface Playbook {
+  body: string;
+  updated_at: string | null;
+  updated_by: string | null;
+}
+
 export interface Post {
   id: string;
   platform: string;
@@ -106,6 +112,9 @@ export const api = {
   addSearch: (body: SearchWrite) => request<Search>("/api/searches", json("POST", body)),
   updateSearch: (id: string, body: SearchWrite) => request<Search>(`/api/searches/${id}`, json("PATCH", body)),
   deleteSearch: (id: string) => request<{ ok: boolean }>(`/api/searches/${id}`, { method: "DELETE" }),
+
+  playbook: () => request<Playbook>("/api/playbook"),
+  savePlaybook: (body: string) => request<Playbook>("/api/playbook", json("PUT", { body })),
 
   runSchedule: () => request<RunSchedule>("/api/run-schedule"),
   saveRunSchedule: (body: RunSettings) => request<{ ok: boolean }>("/api/run-schedule", json("PUT", body)),

@@ -7,6 +7,7 @@
 import { createApp, orgId, widgets } from "@clawnify/app";
 import { query } from "./db.js";
 import type { Env } from "./env.js";
+import { registerPlaybook } from "./routes/playbook.js";
 import { counts, registerPosts } from "./routes/posts.js";
 import { registerSearches } from "./routes/searches.js";
 import { scheduleRoutes } from "./routes/schedule.js";
@@ -27,6 +28,7 @@ app.onError((err, c) => {
 registerPosts(app);
 registerSearches(app);
 registerVoices(app);
+registerPlaybook(app);
 app.route("/", scheduleRoutes);
 
 widgets(app, async (c) => {
