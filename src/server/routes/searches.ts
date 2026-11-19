@@ -76,7 +76,7 @@ export function registerSearches(app: App) {
     path: "/api/searches",
     tags: ["Searches"],
     summary: "Add a search",
-    request: { body: { content: { "application/json": { schema: Write } } } },
+    request: { body: { required: true, content: { "application/json": { schema: Write } } } },
     responses: { 200: ok("The search", SearchSchema), 403: fail("No organisation") },
   });
 
@@ -100,7 +100,7 @@ export function registerSearches(app: App) {
     description: "Changes only the fields sent.",
     request: {
       params: z.object({ id: z.string() }),
-      body: { content: { "application/json": { schema: Write.partial() } } },
+      body: { required: true, content: { "application/json": { schema: Write.partial() } } },
     },
     responses: { 200: ok("The search", SearchSchema), 403: fail("No organisation"), 404: fail("Not found") },
   });

@@ -57,7 +57,7 @@ export function registerVoices(app: App) {
     path: "/api/voices",
     tags: ["Voices"],
     summary: "Add a voice",
-    request: { body: { content: { "application/json": { schema: Write } } } },
+    request: { body: { required: true, content: { "application/json": { schema: Write } } } },
     responses: { 200: ok("The voice", VoiceSchema), 403: fail("No organisation") },
   });
 
@@ -84,7 +84,7 @@ export function registerVoices(app: App) {
     tags: ["Voices"],
     summary: "Change a voice",
     description: "Changes only the fields sent.",
-    request: { params: z.object({ id: z.string() }), body: { content: { "application/json": { schema: Write.partial() } } } },
+    request: { params: z.object({ id: z.string() }), body: { required: true, content: { "application/json": { schema: Write.partial() } } } },
     responses: { 200: ok("The voice", VoiceSchema), 403: fail("No organisation"), 404: fail("Not found") },
   });
 

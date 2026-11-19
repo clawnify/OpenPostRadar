@@ -163,7 +163,7 @@ export function registerPosts(app: App) {
     description:
       "Call it with the links from a search page BEFORE reading or drafting anything. A known link (in the queue, commented or dismissed) needs no work.",
     request: {
-      body: { content: { "application/json": { schema: z.object({ urls: z.array(z.string().max(2000)).min(1).max(50) }) } } },
+      body: { required: true, content: { "application/json": { schema: z.object({ urls: z.array(z.string().max(2000)).min(1).max(50) }) } } },
     },
     responses: {
       200: ok(
@@ -200,7 +200,7 @@ export function registerPosts(app: App) {
     description:
       "Up to 25 posts per call. A link already known is skipped, never updated: a post somebody dismissed stays dismissed, and one in the queue keeps the edits a person made.",
     request: {
-      body: { content: { "application/json": { schema: z.object({ posts: z.array(NewPost).min(1).max(25) }) } } },
+      body: { required: true, content: { "application/json": { schema: z.object({ posts: z.array(NewPost).min(1).max(25) }) } } },
     },
     responses: {
       200: ok(
@@ -276,7 +276,7 @@ export function registerPosts(app: App) {
       "Changes only the fields sent. status=commented records final_comment (the suggestion, if none is sent). status=dismissed takes a dismiss_reason. status=new reopens it.",
     request: {
       params: z.object({ id: z.string() }),
-      body: { content: { "application/json": { schema: Patch } } },
+      body: { required: true, content: { "application/json": { schema: Patch } } },
     },
     responses: { 200: ok("The post as saved", PostSchema), 403: fail("No organisation"), 404: fail("Not found") },
   });
