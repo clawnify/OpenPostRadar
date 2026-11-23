@@ -1,4 +1,4 @@
-# OpenRadar: agent guide
+# OpenPostRadar: agent guide
 
 ## Division of labour
 

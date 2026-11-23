@@ -15,7 +15,6 @@
     "storage": false
   },
   "deploy": {
-    "title": "Find the posts worth answering",
     "subtitle": "Your agent watches LinkedIn for people asking about what you do, and hands you each one with a comment ready to paste.",
     "prompts": [
       {

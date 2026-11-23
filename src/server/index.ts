@@ -1,4 +1,4 @@
-// OpenRadar: the API.
+// OpenPostRadar: the API.
 //
 // `createApp` brings the OpenAPI router, the per-request database wiring, and
 // the two discovery routes (`/api/openapi.json`, `/llms.txt`) the org's agent
@@ -14,7 +14,7 @@ import { scheduleRoutes } from "./routes/schedule.js";
 import { registerVoices } from "./routes/voices.js";
 
 const app = createApp<Env>({
-  title: "OpenRadar",
+  title: "OpenPostRadar",
   version: "1.0.0",
   description:
     "Social posts worth answering, found by an agent and queued for a person: each with why it matters, a drafted comment, and who should post it. Nothing is ever posted automatically.",

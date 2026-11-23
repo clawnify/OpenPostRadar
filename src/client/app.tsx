@@ -68,7 +68,7 @@ export function App() {
 
   return (
     <div className="flex min-h-dvh flex-col md:flex-row">
-      <AppNav title="OpenRadar" icon="target" groups={[{ items: nav }]} active={view} onNavigate={(item) => go(item.id as View)} />
+      <AppNav title="OpenPostRadar" icon="target" groups={[{ items: nav }]} active={view} onNavigate={(item) => go(item.id as View)} />
 
       <main className="min-w-0 flex-1 p-6 md:p-8">
         <div className="min-w-0">
