@@ -1,6 +1,6 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="readme-banner-dark.png" />
-  <img src="readme-banner.png" alt="OpenPostRadar: your agent finds the posts worth answering, and you post every comment yourself" width="100%" />
+  <img src="readme-banner.png" alt="OpenPostRadar: posts found, comments drafted, posted by you. The queue of posts to answer, with a drafted comment and its match score enlarged" width="100%" />
 </picture>
 
 # OpenPostRadar: The Open-Source Social Listening Tool for Finding Posts Worth Answering
