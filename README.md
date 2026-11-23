@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="readme-banner-dark.png" />
+  <img src="readme-banner.png" alt="OpenPostRadar: your agent finds the posts worth answering, and you post every comment yourself" width="100%" />
+</picture>
+
 # OpenPostRadar: The Open-Source Social Listening Tool for Finding Posts Worth Answering
 
 [![Deploy with Clawnify](https://app.clawnify.com/deploy-button.svg)](https://app.clawnify.com/deploy?repo=clawnify/OpenPostRadar)
@@ -7,6 +12,16 @@ Your agent searches LinkedIn for people asking about what you do, skips every po
 Think of it as an open-source alternative to social listening tools like **Brand24**, built for one job: finding the conversations worth joining. There is no per-keyword plan, so you add as many searches as you want.
 
 Built with **React + Tailwind** on a **Hono API** and a **SQLite** database, with a full OpenAPI surface so an agent can drive it.
+
+## See it in action
+
+Conceptual UI illustrations of the app's main capabilities, with fictional example data. Open an image to see the details.
+
+| A reason and a draft for every find | You post it yourself |
+|---|---|
+| [![Conceptual queue card: a restaurant owner's post asking about payroll, a 92% match with the reason it matters, and a drafted comment being edited. Behind it, a second find from Reddit.](previews/draft.png)](previews/draft.png) | [![Conceptual queue card with the Copy comment and open post button being clicked. Behind it, the history of posts already commented on, with who posted each one.](previews/post.png)](previews/post.png) |
+| **It learns what you skip** | **Runs on your schedule** |
+| [![Conceptual queue card for a job ad with a low match score and the skip reasons: not relevant, a competitor, already answered, not our audience. Behind it, the searches with how many of their finds were commented on and skipped.](previews/learn.png)](previews/learn.png) | [![Conceptual schedule card: the agent that runs the searches, the time, weekdays only, and the next run. Behind it, the playbook of search wordings the agent has learned work.](previews/schedule.png)](previews/schedule.png) |
 
 ## What it does
 

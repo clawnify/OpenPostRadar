@@ -1,0 +1,30 @@
+[
+  {
+    "src": "previews/draft.png",
+    "alt": "Conceptual queue card: a restaurant owner's post asking about payroll, a 92% match with the reason it matters, and a drafted comment being edited. Behind it, a second find from Reddit.",
+    "caption": "Every find arrives with why it matters and a comment to edit.",
+    "width": 1600,
+    "height": 1000
+  },
+  {
+    "src": "previews/post.png",
+    "alt": "Conceptual queue card with the Copy comment and open post button being clicked. Behind it, the history of posts already commented on, with who posted each one.",
+    "caption": "You post every comment from your own account.",
+    "width": 1600,
+    "height": 1000
+  },
+  {
+    "src": "previews/learn.png",
+    "alt": "Conceptual queue card for a job ad with a low match score and the skip reasons: not relevant, a competitor, already answered, not our audience. Behind it, the searches with how many of their finds were commented on and skipped.",
+    "caption": "Skip reasons and results per search shape the next run.",
+    "width": 1600,
+    "height": 1000
+  },
+  {
+    "src": "previews/schedule.png",
+    "alt": "Conceptual schedule card: the agent that runs the searches, the time, weekdays only, and the next run. Behind it, the playbook of search wordings the agent has learned work.",
+    "caption": "Your agent runs the searches at the time you pick.",
+    "width": 1600,
+    "height": 1000
+  }
+]
