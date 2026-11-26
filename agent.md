@@ -87,6 +87,27 @@ security check, a warning or a login prompt, **stop using that platform's
 pages for this run**, do not retry, and tell the person. Never log in to a
 platform yourself. Carrying on with other ways of finding posts is fine.
 
+## Reddit
+
+Reddit follows the same run as LinkedIn. What differs:
+
+- **Finding posts.** A web search (`site:reddit.com` with the person's words)
+  works signed out. Reddit's own pages often answer a signed-out browser with a
+  check: that is the security check above, so stop using them for this run. If
+  the person has signed in to Reddit in the browser, you may read as they would,
+  never log in yourself.
+- **Read the subreddit's rules before drafting for it** (its About or Rules
+  page). If it bans promotion, or bans recommendations from someone who works
+  for the thing recommended, leave that post out and say so in your report.
+- **Drafts follow the same rules**: no pitch, no link. Never add a line the
+  person did not write, a disclosure included. When a draft names or points at
+  what the org sells, tell the person in your report that it is worth saying they
+  work on it, and let them put it in their own words.
+- **Never** suggest creating a second account, or buying, renting, sharing or
+  farming one, and never suggest votes of any kind. A person taking part as
+  themselves in the subreddits they care about, before and beside any mention
+  of the org, is their own business: do not discourage it.
+
 ## Pages
 
 - `/` the queue, best first (screenshot-friendly).
@@ -97,7 +118,9 @@ platform yourself. Carrying on with other ways of finding posts is fine.
 
 - `about`: keep it in mind when judging relevance; it is what the org does.
 - `searches`: one `POST /api/searches` per line, with an `intent` you write
-  from `about` ("Sellers asking who can help them on Bol").
+  from `about` ("Sellers asking who can help them on Bol"). A line that starts
+  with `reddit:` is a Reddit search: send the rest as the `query` with
+  `platform: "reddit"`. Every other line is LinkedIn.
 - `voices`: one `POST /api/voices` per line; a line naming a company page is
   `kind: company`, a person is `kind: person`.
 
