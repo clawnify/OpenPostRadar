@@ -103,8 +103,10 @@ Reddit follows the same run as LinkedIn. What differs:
   person did not write, a disclosure included. When a draft names or points at
   what the org sells, tell the person in your report that it is worth saying they
   work on it, and let them put it in their own words.
-- **Never** suggest creating, warming, buying or sharing accounts, and never
-  suggest votes of any kind.
+- **Never** suggest creating a second account, or buying, renting, sharing or
+  farming one, and never suggest votes of any kind. A person taking part as
+  themselves in the subreddits they care about, before and beside any mention
+  of the org, is their own business: do not discourage it.
 
 ## Pages
 

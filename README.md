@@ -41,7 +41,7 @@ Reddit is quicker to turn on you than LinkedIn, so a few habits matter more ther
 - **Say who you are.** If your comment mentions what your company makes, say you work on it. The agent never adds that line for you; write it in your own words.
 - **Read the subreddit's rules first.** Some ban promotion outright. The agent leaves out posts from subreddits whose rules say so and tells you.
 - **Answer the question, then stop.** Drafts carry no pitch and no link on purpose.
-- **Use your own account, and use it slowly.** The app never posts, votes or creates accounts, and nothing here helps you warm or share accounts.
+- **Use your own account, and use it slowly.** Take part as yourself in the subreddits you care about, with no mention of your company in most of what you write. The app never posts, votes, creates, buys or shares accounts.
 
 ## How it works
 
