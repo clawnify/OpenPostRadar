@@ -1,0 +1,47 @@
+{
+  "shots": [
+    {
+      "name": "queue",
+      "caption": "Posts worth answering, each with why it matters and a reply drafted for it.",
+      "alt": "The queue: Reddit posts from people asking about scheduling software, each with a match score, the reason, and a suggested comment."
+    },
+    {
+      "name": "skip-reasons",
+      "caption": "Skip a post and say why, so your agent finds better ones next time.",
+      "alt": "A queue card after Skip is clicked, showing the reasons: not relevant, a competitor, too old, already answered, not our audience.",
+      "steps": [
+        {
+          "click": {
+            "selector": "article button",
+            "text": "Skip"
+          }
+        }
+      ]
+    },
+    {
+      "name": "history",
+      "caption": "What you commented, exactly as you posted it.",
+      "alt": "History: the comments a person posted.",
+      "path": "/history"
+    },
+    {
+      "name": "skipped",
+      "caption": "What you skipped, and the reason you gave.",
+      "alt": "History, Skipped tab: posts skipped with their reasons.",
+      "path": "/history",
+      "steps": [
+        {
+          "click": {
+            "text": "Skipped"
+          }
+        }
+      ]
+    },
+    {
+      "name": "searches",
+      "caption": "What your agent looks for, how each search is doing, and the playbook of wordings it has learned.",
+      "alt": "Searches: three searches with their finds, comments and skips, and the playbook.",
+      "path": "/searches"
+    }
+  ]
+}
