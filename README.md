@@ -32,7 +32,16 @@ Answering the right post at the right moment is one of the cheapest ways to get 
 - **The app keeps the record.** A post is identified by its link, so nothing is queued twice and a post you skipped stays skipped. History shows what you commented and what you skipped, with the reason.
 - **It gets better at your taste.** The agent reads your edits and your skip reasons before its next run, and keeps a short playbook of the wordings that found real asks. You can read and edit that playbook.
 
-It is built for LinkedIn first. A search can target Reddit instead by setting its `platform` through the API, and each card shows which of the two a post came from.
+It is built for LinkedIn first. A search can target Reddit instead: start its line with `reddit:` when you deploy, or set its `platform` through the API. Each card shows which of the two a post came from.
+
+## Using it on Reddit
+
+Reddit is quicker to turn on you than LinkedIn, so a few habits matter more there:
+
+- **Say who you are.** If your comment mentions what your company makes, say you work on it. The agent never adds that line for you; write it in your own words.
+- **Read the subreddit's rules first.** Some ban promotion outright. The agent leaves out posts from subreddits whose rules say so and tells you.
+- **Answer the question, then stop.** Drafts carry no pitch and no link on purpose.
+- **Use your own account, and use it slowly.** The app never posts, votes or creates accounts, and nothing here helps you warm or share accounts.
 
 ## How it works
 
